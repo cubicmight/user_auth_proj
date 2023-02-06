@@ -1,5 +1,6 @@
-from flask import render_template, flash, redirect, url_for
-from app import app
+import cv2
+from flask import render_template, flash, redirect, url_for, Response
+from app import app, cap
 from app.forms import LoginForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
@@ -7,6 +8,7 @@ from flask import request
 from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
+
 
 
 @app.route('/')
@@ -64,3 +66,62 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+# @app.route('/forward/<int:inchesCount>')
+# def forward(inchesCount):
+#     motor.MotorForward(inchesCount)
+#     return "Going forward"
+#     return jsonify({'forward': inchesCount, 'success': True})
+#     motor.MotorStop(0)
+#     motor.MotorStop(1)
+#
+#
+# @app.route("/reverse/<int:inchesCount>")
+# def reverse(inchesCount):
+#     motor.MotorReverse(inchesCount)
+#     return "Going back"
+#     return jsonify({'reverse': inchesCount, 'success': True})
+#     motor.MotorStop(0)
+#     motor.MotorStop(1)
+#
+#
+# @app.route("/left/<int:turnCount>")
+# def left(turnCount):
+#     motor.MotorLeft(turnCount)
+#     return "Going left"
+#     return jsonify({'left': turnCount, 'success': True})
+#     motor.MotorStop(0)
+#     motor.MotorStop(1)
+#
+#
+# @app.route("/right/<int:turnCount>")
+# def right(turnCount):
+#     motor.MotorRight(turnCount)
+#     return "Going right"
+#     return jsonify({'right': turnCount, 'success': True})
+#     motor.MotorStop(0)
+#     motor.MotorStop(1)
+#
+#
+# @app.route("/stop")
+# def stop():
+#     motor.MotorStop(0)
+#     motor.MotorStop(1)
+#     return jsonify({'stop': 0, 'success': True})
+
+
+def gen_frame():
+    """Video streaming generator function."""
+    while cap:
+        frame = cap.read()
+        convert = cv2.imencode('.jpg', frame)[1].tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
+
+
+@app.route('/video_feed')
+def video_feed():
+    """Video streaming route. Put this in the src attribute of an img tag."""
+    return Response(gen_frame(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')

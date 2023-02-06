@@ -1,8 +1,23 @@
 {% extends "base.html" %}
 <!--needed for logs for stern-->
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
-    {% for post in posts %}
-    <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
-    {% endfor %}
+<h1>Hi, {{ current_user.username }}!</h1>
+{% for post in posts %}
+<div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+{% endfor %}
+<div class="tl">
+    <h1>Stream</h1>
+    <img src="{{ url_for('video_feed') }}">
+</div>
+<div class="tr">
+
+</div>
+<div class="bl">
+
+</div>
+<div class="br">
+
+</div>
+
 {% endblock %}
+

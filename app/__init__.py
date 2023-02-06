@@ -1,4 +1,5 @@
 from flask import Flask
+from app.camera import CameraStream
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,5 +11,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
+cap = CameraStream().start()
 
 from app import routes, models
