@@ -76,7 +76,7 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route('/forward/user/<int:inchesCount>')
+@app.route('/forward/<user>/<int:inchesCount>')
 def forward(user, inchesCount):
     username = current_user.username ##use this username instead of getting passed in for security
     motor.MotorForward(inchesCount)
@@ -90,7 +90,7 @@ def forward(user, inchesCount):
     # motor.MotorStop(1)
 
 
-@app.route("/reverse/user/<int:inchesCount>")
+@app.route("/reverse/<user>/<int:inchesCount>")
 def reverse(user, inchesCount):
     # motor.MotorReverse(inchesCount)
     # moves.append(jsonify({'reverse': inchesCount, 'success': True}))
@@ -105,7 +105,7 @@ def reverse(user, inchesCount):
     motor.MotorStop(1)
     return "Going reverse"
 
-@app.route("/left/user/<int:turnCount>")
+@app.route("/left/<user>/<int:turnCount>")
 def left(user, turnCount):
     # motor.MotorLeft(turnCount)
     # return "Going left"
@@ -119,7 +119,7 @@ def left(user, turnCount):
     motor.MotorStop(1)
     return "Going left"
 
-@app.route("/right/user/<int:turnCount>")
+@app.route("/right/<user>/<int:turnCount>")
 def right(user, turnCount):
     # motor.MotorRight(turnCount)
     # return "Going right"
@@ -133,7 +133,7 @@ def right(user, turnCount):
     motor.MotorStop(1)
     return "Going right"
 
-@app.route("/special/user")
+@app.route("/special/<user>")
 def special(user):
     motor.MotorForward(10)
     moves.append(jsonify({'forward': 10, 'success': True}))
