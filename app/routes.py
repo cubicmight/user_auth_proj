@@ -8,6 +8,7 @@ from flask import request
 from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
+from roboclass import MotorDriver
 
 motor = MotorDriver()
 
