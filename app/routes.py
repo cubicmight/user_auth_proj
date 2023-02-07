@@ -55,7 +55,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-moves = ['test 1', 'test 2']
+moves = ['yeet 1', 'test 2']
 
 
 @app.route('/logs')
