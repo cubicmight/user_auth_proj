@@ -9,6 +9,7 @@ from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
 
+motor = MotorDriver()
 
 @app.route('/')
 @app.route('/index')
