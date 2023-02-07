@@ -6,18 +6,31 @@
 <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
 {% endfor %}
 <div class="tl">
-    <h1>Stream</h1>
+    <h1>Video Stream</h1>
     <img src="{{ url_for('video_feed') }}">
 </div>
 <div class="tr">
 
 </div>
 <div class="bl">
-
+    <br><br><br>
+    <button type="button" onclick=moves("forward",5,'{{current_user.username}}')>Forward</button><br><br><br><br><br>
+    <button type="button" onclick=moves("reverse",5,'{{current_user.username}}')>Reverse</button><br><br><br><br><br>
+    <button type="button" onclick=moves("left",5,'{{current_user.username}}')>Left</button><br><br><br><br><br>
+    <button type="button" onclick=moves("right",5,'{{current_user.username}}')>Right</button><br><br><br><br><br>
+    <button type="button" onclick=moves("special",'{{current_user.username}}')>Special</button><br><br><br><br><br>
+<!--    <button type="button" onclick=moves("Stop",'{{current_user.username}}')>Stop</button>-->
 </div>
 <div class="br">
+    <label for="logs">Logs Label</label><br>
 
+    <textarea id="logs" name="logs" rows="4" cols="50">
+
+</textarea><br>
+    <button type="button" onclick=fetchlogs()>Manually Update Logs</button>
 </div>
+
+
 
 {% endblock %}
 

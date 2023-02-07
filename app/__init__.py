@@ -11,6 +11,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
-cap = CameraStream().start()
+cap = CameraStream().start() ###cv2.VideoCapture(0)
 
 from app import routes, models
