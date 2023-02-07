@@ -14,12 +14,19 @@
 </div>
 <div class="bl">
     <br><br><br>
-    <button type="button" onclick=moves("forward",5,'{{current_user.username}}')>Forward</button><br><br><br><br><br>
-    <button type="button" onclick=moves("reverse",5,'{{current_user.username}}')>Reverse</button><br><br><br><br><br>
-    <button type="button" onclick=moves("left",5,'{{current_user.username}}')>Left</button><br><br><br><br><br>
-    <button type="button" onclick=moves("right",5,'{{current_user.username}}')>Right</button><br><br><br><br><br>
-    <button type="button" onclick=moves("special",'{{current_user.username}}')>Special</button><br><br><br><br><br>
-<!--    <button type="button" onclick=moves("Stop",'{{current_user.username}}')>Stop</button>-->
+    <label for="steps">Quantity (between 1 and 5):</label>
+    <input type="number" id="steps" name="steps" min="1" max="50">
+    <button type="button" onclick=moves("forward",5,'{{current_user.username}}')>Forward</button>
+    <br><br><br><br><br>
+    <button type="button" onclick=moves("reverse",5,'{{current_user.username}}')>Reverse</button>
+    <br><br><br><br><br>
+    <button type="button" onclick=moves("left",5,'{{current_user.username}}')>Left</button>
+    <br><br><br><br><br>
+    <button type="button" onclick=moves("right",5,'{{current_user.username}}')>Right</button>
+    <br><br><br><br><br>
+    <button type="button" onclick=moves("special",'{{current_user.username}}')>Special</button>
+    <br><br><br><br><br>
+    <!--    <button type="button" onclick=moves("Stop",'{{current_user.username}}')>Stop</button>-->
 </div>
 <div class="br">
     <label for="logs">Logs Label</label><br>
@@ -29,7 +36,6 @@
 </textarea><br>
     <button type="button" onclick=fetchlogs()>Manually Update Logs</button>
 </div>
-
 
 
 {% endblock %}

@@ -11,7 +11,9 @@ function fetchlogs() {
 }
 
 function moves(direction, num, user) {
-    fetch('/' + direction + '/' + user + '/' + num)
+    let steps = document.getElementById("steps").value;
+    console.log("number of steps is " + steps);
+    fetch('/' + direction + '/' + user + '/' + steps)
         .then(response => {
             return response.json();
 
@@ -22,6 +24,8 @@ function moves(direction, num, user) {
 
         })
 }
+
+
 
 
 
