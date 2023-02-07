@@ -82,8 +82,8 @@ def register():
 def forward(user, inchesCount):
     username = current_user.username ##use this username instead of getting passed in for security
     motor.MotorForward(inchesCount)
-    # moves.append(jsonify({'forward': inchesCount, 'success': True}))
-    moves.append(username + "is moving forward" + inchesCount)
+    moves.append(jsonify({'forward': inchesCount, 'success': True}))
+    # moves.append(username + "is moving forward" + inchesCount)
     motor.MotorStop(0)
     motor.MotorStop(1)
     return "Going forward"
