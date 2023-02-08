@@ -136,7 +136,7 @@ def right(user, turnCount):
     motor.MotorStop(1)
 
 
-@app.route("/special/<user>")
+@app.route("/special")
 def special(user):
     username = current_user.username  ##use this username instead of getting passed in for security
     motor.MotorForward(10)
