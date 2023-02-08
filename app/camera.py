@@ -2,6 +2,7 @@ from threading import Thread, Lock
 import cv2
 
 
+
 class CameraStream(object):
     def __init__(self, src=0):
         self.stream = cv2.VideoCapture(src)

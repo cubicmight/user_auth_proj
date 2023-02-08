@@ -199,10 +199,24 @@ def right(user, turnCount):
 #     motor.MotorStop(1)
 #     return "Stopping"
 
+
+imgLoad = cv2.imread(
+        "arrowpng.parspng.com-18 (1) resizer.png",
+        cv2.IMREAD_UNCHANGED)
+
+current_image = imgLoad
+
 def gen_frame():
     """Video streaming generator function."""
+    global current_image
     while cap:
-        frame = cap.read()
+        success, img, frame = cap.read()
+        imgResult = cvzone.overlayPNG(img, current_image, [750, 400])  ##450 300
+        cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
+        imgX = Image.fromarray(cv2image)
+        imgtk = ImageTk.PhotoImage(image=imgX)
+        robotPOV.imgtk = imgtk
+        robotPOV.configure(image=imgtk)
         convert = cv2.imencode('.jpg', frame)[1].tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
