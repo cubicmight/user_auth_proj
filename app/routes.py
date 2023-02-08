@@ -209,7 +209,7 @@ def right(user, turnCount):
 
 
 current_image = cv2.imread(
-        "/Users/pl251351/PycharmProjects/user_auth_proj/app/arrowpng.parspng.com-18 (1) resizer.png",
+        "app/arrowpng.parspng.com-18 (1) resizer.png",
         cv2.IMREAD_UNCHANGED)
 
 def gen_frame():
