@@ -82,78 +82,79 @@ def register():
 @app.route('/forward/<user>/<int:inchesCount>')
 def forward(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    # motor.MotorForward(inchesCount)
+    motor.MotorForward(inchesCount)
     data = UserLogData(data="forward: %d, success: %s\n" % (inchesCount, True))
     db.session.add(data)
     db.session.commit()
     data = UserLogData(data=username + " is moving forward " + str(inchesCount) + "\n")
     db.session.add(data)
     db.session.commit()
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    motor.MotorStop(0)
+    motor.MotorStop(1)
     return jsonify({'forward': inchesCount, 'success': True})
 
 
 @app.route("/reverse/<user>/<int:inchesCount>")
 def reverse(user, inchesCount):
-    # motor.MotorReverse(inchesCount)
-    # moves.append(jsonify({'reverse': inchesCount, 'success': True}))
-    # return "Going back"
-    # return jsonify({'reverse': inchesCount, 'success': True})
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
-    # motor.MotorReverse(inchesCount)
-    # moves.append(jsonify({'reverse': inchesCount, 'success': True}))
-    moves.append(user + "is moving reverse" + inchesCount)
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    username = current_user.username  ##use this username instead of getting passed in for security
+    motor.MotorReverse(inchesCount)
+    data = UserLogData(data="reverse: %d, success: %s\n" % (inchesCount, True))
+    db.session.add(data)
+    db.session.commit()
+    data = UserLogData(data=username + " is reversing " + str(inchesCount) + "\n")
+    db.session.add(data)
+    db.session.commit()
+    motor.MotorStop(0)
+    motor.MotorStop(1)
     return jsonify({'reverse': inchesCount, 'success': True})
 
 
 @app.route("/left/<user>/<int:turnCount>")
 def left(user, turnCount):
-    # motor.MotorLeft(turnCount)
-    # return "Going left"
-    # return jsonify({'left': turnCount, 'success': True})
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
-    # motor.MotorLeft(turnCount)
-    # moves.append(jsonify({'left': turnCount, 'success': True}))
-    moves.append(user + "is turning left" + turnCount * 90)
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    username = current_user.username  ##use this username instead of getting passed in for security
+    motor.MotorLeft(turnCount)
+    data = UserLogData(data="left: %d, success: %s\n" % (turnCount, True))
+    db.session.add(data)
+    db.session.commit()
+    data = UserLogData(data=username + " is moving forward " + str(turnCount) + "\n")
+    db.session.add(data)
+    db.session.commit()
+    motor.MotorStop(0)
+    motor.MotorStop(1)
     return jsonify({'left': turnCount * 90, 'success': True})
 
 
 @app.route("/right/<user>/<int:turnCount>")
 def right(user, turnCount):
-    # motor.MotorRight(turnCount)
-    # return "Going right"
-    # return jsonify({'right': turnCount, 'success': True})
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
-    # motor.MotorRight(turnCount)
-    # moves.append(jsonify({'right': turnCount, 'success': True}))
-    moves.append(user + "is turning right" + turnCount * 90)
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
-    return jsonify({'right': turnCount * 90, 'success': True})
+    username = current_user.username  ##use this username instead of getting passed in for security
+    motor.MotorRight(turnCount)
+    data = UserLogData(data="right: %d, success: %s\n" % (turnCount, True))
+    db.session.add(data)
+    db.session.commit()
+    data = UserLogData(data=username + " is moving right " + str(turnCount) + "\n")
+    db.session.add(data)
+    db.session.commit()
+    motor.MotorStop(0)
+    motor.MotorStop(1)
 
 
 @app.route("/special/<user>")
 def special(user):
     # motor.MotorForward(10)
     # moves.append(jsonify({'forward': 10, 'success': True}))
-    moves.append(user + "is moving forward 10")
+    forward(10)
+    left(1)
+    forward(10)
+    right(10)
+    motor.MotorStop(0)
+    motor.MotorStop(1)
     # motor.MotorRight(1)
     # moves.append(jsonify({'right': 1, 'success': True}))
-    moves.append(user + "is turning right 90 degrees")
+
     # motor.MotorForward(10)
     # moves.append(jsonify({'forward': 10, 'success': True}))
-    moves.append(user + "is moving forward 10")
     # motor.MotorLeft(1)
     # moves.append(jsonify({'left': 1, 'success': True}))
-    moves.append(user + "is turning left 90 degrees")
     return jsonify({'special': True, 'success': True})
 
 
