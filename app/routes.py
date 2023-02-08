@@ -212,37 +212,14 @@ current_image = cv2.imread(
         "/Users/pl251351/PycharmProjects/user_auth_proj/app/arrowpng.parspng.com-18 (1) resizer.png",
         cv2.IMREAD_UNCHANGED)
 
-# def gen_frame():
-#     """Video streaming generator function."""
-#     while cap:
-#         frame = cap.read()
-#         convert = cv2.imencode('.jpg', frame)[1].tobytes()
-#         yield (b'--frame\r\n'
-#                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
-#
-#
-# @app.route('/video_feed')
-# def video_feed():
-#     """Video streaming route. Put this in the src attribute of an img tag."""
-#     return Response(gen_frame(),
-#                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
-
-
 def gen_frame():
     """Video streaming generator function."""
     global current_image
     while cap:
-        img = cap.read()
-        imgResult = cvzone.overlayPNG(img, current_image, [450, 300])  ##450 300
-        cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
-        imgX = Image.fromarray(cv2image)
-        imgtk = ImageTk.PhotoImage(image=imgX)
-        robotPOV.imgtk = imgtk
-        robotPOV.configure(image=imgtk)
-        convert = cv2.imencode('.jpg', frame)[1].tobytes()
-        yield (b'--img\r\n'
+        frame = cap.read()
+        tester = cv2.imwrite(frame, current_image)
+        convert = cv2.imencode('.jpg', tester)[1].tobytes()
+        yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
 
 
@@ -251,3 +228,34 @@ def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+
+# background = cv2.imread('field.jpg')
+# overlay = cv2.imread('dice.png')
+#
+# added_image = cv2.addWeighted(background,0.4,overlay,0.1,0)
+#
+# cv2.imwrite('combined.png', added_image)
+
+# def gen_frame():
+#     """Video streaming generator function."""
+#     global current_image
+#     while cap:
+#         img = cap.read()
+#         imgResult = cvzone.overlayPNG(img, current_image, [450, 300])  ##450 300
+#         cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
+#         imgX = Image.fromarray(cv2image)
+#         imgtk = ImageTk.PhotoImage(image=imgX)
+#         robotPOV.imgtk = imgtk
+#         robotPOV.configure(image=imgtk)
+#         convert = cv2.imencode('.jpg', frame)[1].tobytes()
+#         yield (b'--img\r\n'
+#                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
+#
+#
+# @app.route('/video_feed')
+# def video_feed():
+#     """Video streaming route. Put this in the src attribute of an img tag."""
+#     return Response(gen_frame(),
+#                     mimetype='multipart/x-mixed-replace; boundary=frame')
