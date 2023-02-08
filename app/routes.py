@@ -9,7 +9,14 @@ from flask import request
 from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
+import numpy
+import requests
+from PIL import Image, ImageTk
+import cv2
+import urllib
+import numpy as np
 import cvzone
+
 
 
 from roboclass import MotorDriver
@@ -201,18 +208,18 @@ def right(user, turnCount):
 #     return "Stopping"
 
 
-imgLoad = cv2.imread(
+current_image = cv2.imread(
         "arrowpng.parspng.com-18 (1) resizer.png",
         cv2.IMREAD_UNCHANGED)
 
-current_image = imgLoad
+
 
 def gen_frame():
     """Video streaming generator function."""
     global current_image
     while cap:
         img = cap.read()
-        imgResult = cvzone.overlayPNG(img, current_image, [750, 400])  ##450 300
+        imgResult = cvzone.overlayPNG(img, current_image, [450, 300])  ##450 300
         cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
         imgX = Image.fromarray(cv2image)
         imgtk = ImageTk.PhotoImage(image=imgX)
