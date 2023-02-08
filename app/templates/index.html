@@ -14,27 +14,27 @@
         <div class="col-sm-4 bg-light">
             <div class="p-5 row">
                 <div class="col-md-12">
-                    <input type="number" id="number" name="number" min="0" max="500"></input>
+                    <input id="steps" max="500" min="0" name="steps" type="number"></input>
                 </div>
             </div>
             <div class="p-5 row">
                 <div class="col">
-                    <button type="button" class="btn btn-primary"
-                            onclick=moves("forward",5,'{{current_user.username}}')>Forward
+                    <button class="btn btn-primary" onclick=moves("forward",5,'{{current_user.username}}')
+                            type="button">Forward
                     </button>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-primary"
-                            onclick=moves("reverse",5,'{{current_user.username}}')>Back
+                    <button class="btn btn-primary" onclick=moves("reverse",5,'{{current_user.username}}')
+                            type="button">Back
                     </button>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onclick=moves("left",5,'{{current_user.username}}')>
+                    <button class="btn btn-primary" onclick=moves("left",5,'{{current_user.username}}') type="button">
                         Left
                     </button>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-primary" onclick=moves("right",5,'{{current_user.username}}')>
+                    <button class="btn btn-primary" onclick=moves("right",5,'{{current_user.username}}') type="button">
                         Right
                     </button>
                 </div>
@@ -64,7 +64,7 @@
         <div class="col">
         </div>
         <div class="col">
-            <button type="button" class="btn btn-primary" onclick=fetchlogs()>Add Row</button>
+            <button class="btn btn-primary" onclick=fetchlogs() type="button">Add Row</button>
         </div>
         <div class="col">
         </div>
