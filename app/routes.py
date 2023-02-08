@@ -209,7 +209,7 @@ def right(user, turnCount):
 
 
 current_image = cv2.imread(
-        "arrowpng.parspng.com-18 (1) resizer.png",
+        "/Users/pl251351/PycharmProjects/user_auth_proj/app/arrowpng.parspng.com-18 (1) resizer.png",
         cv2.IMREAD_UNCHANGED)
 
 # def gen_frame():
@@ -242,7 +242,7 @@ def gen_frame():
         robotPOV.imgtk = imgtk
         robotPOV.configure(image=imgtk)
         convert = cv2.imencode('.jpg', frame)[1].tobytes()
-        yield (b'--frame\r\n'
+        yield (b'--img\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
 
 
