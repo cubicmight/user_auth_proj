@@ -4,8 +4,28 @@ function fetchlogs() {
             return response.json();
 
         })
-        .then(moves => {
-            document.getElementById("logs").value = moves;
+        .then(data => {
+            for (let i = previousCount; i < data.length; i++) {
+                let current = color[count % rowCount];
+                count = count + 1;
+
+                let row = document.createElement("tr");
+                row.className = current;
+                let head = document.createElement("th");
+                head.scope = "row";
+                head.innerHTML = "JS Add";
+                let col1 = document.createElement("td");
+                col1.innerHTML = data[i];
+                let col2 = document.createElement("td");
+                col2.innerHTML = data[i];
+
+                row.appendChild(head);
+                row.appendChild(col1);
+                row.appendChild(col2);
+
+                document.querySelector('.table > tbody').append(row);
+            }
+            previousCount = data.length;
 
         })
 }
@@ -25,8 +45,18 @@ function moves(direction, num, user) {
         })
 }
 
+let count = 0;
+let color = ['table-primary', 'table-secondary', 'table-success', 'table-danger', 'table-warning', 'table-info', 'table-light', 'table-dark'];
+let rowCount = color.length;
+
+let previousCount = 0;
+
+function addRow() {
+    fetch('/logs')
+        .then((response) => response.json())
+        .then((data) => {
+        });
+}
 
 
-
-
-setInterval(fetchlogs, 5000);
+// setInterval(fetchlogs, 5000);

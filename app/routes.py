@@ -1,7 +1,7 @@
 import cv2
 from flask import render_template, flash, redirect, url_for, Response, jsonify
 from flask.scaffold import setupmethod
-from app import app, cap
+from app import app
 from app.forms import LoginForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, UserLogData
@@ -9,19 +9,10 @@ from flask import request
 from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
-import numpy
-import requests
-from PIL import Image, ImageTk
 import cv2
-import urllib
-import numpy as np
-import cvzone
+# from roboclass import MotorDriver
 
-
-
-from roboclass import MotorDriver
-
-motor = MotorDriver()
+# motor = MotorDriver()
 
 @setupmethod
 @app.before_first_request
@@ -88,60 +79,60 @@ def register():
 @app.route('/forward/<user>/<int:inchesCount>')
 def forward(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorForward(inchesCount)
+    # motor.MotorForward(inchesCount)
     data = UserLogData(data="forward: %d, success: %s\n" % (inchesCount, True))
     db.session.add(data)
-    db.session.commit()
+    # db.session.commit()
     data = UserLogData(data=username + " is moving forward " + str(inchesCount) + "\n")
     db.session.add(data)
     db.session.commit()
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
     return jsonify({'forward': inchesCount, 'success': True})
 
 
 @app.route("/reverse/<user>/<int:inchesCount>")
 def reverse(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorReverse(inchesCount)
+    # motor.MotorReverse(inchesCount)
     data = UserLogData(data="reverse: %d, success: %s\n" % (inchesCount, True))
     db.session.add(data)
-    db.session.commit()
+    # db.session.commit()
     data = UserLogData(data=username + " is reversing " + str(inchesCount) + "\n")
     db.session.add(data)
     db.session.commit()
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
     return jsonify({'reverse': inchesCount, 'success': True})
 
 
 @app.route("/left/<user>/<int:turnCount>")
 def left(user, turnCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorLeft(turnCount)
+    # motor.MotorLeft(turnCount)
     data = UserLogData(data="left: %d, success: %s\n" % (turnCount, True))
     db.session.add(data)
-    db.session.commit()
+    # db.session.commit()
     data = UserLogData(data=username + " is moving left " + str(turnCount) + "\n")
     db.session.add(data)
     db.session.commit()
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
     return jsonify({'left': turnCount * 90, 'success': True})
 
 
 @app.route("/right/<user>/<int:turnCount>")
 def right(user, turnCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorRight(turnCount)
+    # motor.MotorRight(turnCount)
     data = UserLogData(data="right: %d, success: %s\n" % (turnCount, True))
     db.session.add(data)
-    db.session.commit()
+    # db.session.commit()
     data = UserLogData(data=username + " is moving right " + str(turnCount) + "\n")
     db.session.add(data)
     db.session.commit()
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
 
 
 # @app.route("/special")

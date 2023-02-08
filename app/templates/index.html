@@ -2,39 +2,72 @@
 <!--needed for logs for stern-->
 {% block content %}
 
-<h1>Hi, {{ current_user.username }}!</h1>
-<div class="tl">
-    <h1>Video Stream</h1>
-    <img src="{{ url_for('video_feed') }}">
+<div class="container-fluid text-center">
+    <div class="p-5 m-5 row bg-danger-subtle">
+        <div class="col col-md-auto">
+            Video
+            <h1>Video Stream</h1>
+            <img src="{{ url_for('video_feed') }}">
+        </div>
+    </div>
+    <div class="p-5 row">
+        <div class="col-sm-4 bg-light">
+            <div class="p-5 row">
+                <div class="col-md-12">
+                    <input type="number" id="number" name="number" min="0" max="500"></input>
+                </div>
+            </div>
+            <div class="p-5 row">
+                <div class="col">
+                    <button type="button" class="btn btn-primary"
+                            onclick=moves("forward",5,'{{current_user.username}}')>Forward
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary"
+                            onclick=moves("reverse",5,'{{current_user.username}}')>Back
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onclick=moves("left",5,'{{current_user.username}}')>
+                        Left
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" onclick=moves("right",5,'{{current_user.username}}')>
+                        Right
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 bg-warning-subtle">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Command</th>
+                    <th scope="col">Result</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4 bg-primary-subtle">
+            Something Else
+        </div>
+    </div>
 </div>
-<div class="tr">
-
 </div>
-<div class="bl">
-    <br><br><br>
-    <label for="steps">Quantity (between 1 and 50):</label>
-    <input type="number" id="steps" name="steps" min="1" max="50">
-    <br><br><br>
-    <button type="button" onclick=moves("forward",5,'{{current_user.username}}')>Forward</button>
-    <br><br><br>
-    <button type="button" onclick=moves("reverse",5,'{{current_user.username}}')>Reverse</button>
-    <br><br><br>
-    <button type="button" onclick=moves("left",5,'{{current_user.username}}')>Left</button>
-    <br><br><br>
-    <button type="button" onclick=moves("right",5,'{{current_user.username}}')>Right</button>
-    <br><br><br>
-    <a href="{{ url_for('logout') }}">Logout</a>
-    <!--    <button type="button" onclick=moves("Stop",'{{current_user.username}}')>Stop</button>-->
+<div class="container-sm">
+    <div class="p-5 row">
+        <div class="col">
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-primary" onclick=fetchlogs()>Add Row</button>
+        </div>
+        <div class="col">
+        </div>
+    </div>
 </div>
-<div class="br">
-<!--    <label for="logs">Logs Label</label><br>-->
-    <h1 for="logs">Log</h1>
-    <textarea id="logs" name="logs" rows="23" cols="170">
-
-</textarea><br>
-    <button type="button" onclick=fetchlogs()>Manually Update Logs</button>
-</div>
-
-
 {% endblock %}
-
