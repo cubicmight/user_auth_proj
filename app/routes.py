@@ -210,7 +210,7 @@ def gen_frame():
     """Video streaming generator function."""
     global current_image
     while cap:
-        success, img = cap.read()
+        img = cap.read()
         imgResult = cvzone.overlayPNG(img, current_image, [750, 400])  ##450 300
         cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
         imgX = Image.fromarray(cv2image)
