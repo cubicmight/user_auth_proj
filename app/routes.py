@@ -212,6 +212,22 @@ current_image = cv2.imread(
         "arrowpng.parspng.com-18 (1) resizer.png",
         cv2.IMREAD_UNCHANGED)
 
+# def gen_frame():
+#     """Video streaming generator function."""
+#     while cap:
+#         frame = cap.read()
+#         convert = cv2.imencode('.jpg', frame)[1].tobytes()
+#         yield (b'--frame\r\n'
+#                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
+#
+#
+# @app.route('/video_feed')
+# def video_feed():
+#     """Video streaming route. Put this in the src attribute of an img tag."""
+#     return Response(gen_frame(),
+#                     mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 
 
 def gen_frame():
@@ -226,7 +242,7 @@ def gen_frame():
         robotPOV.imgtk = imgtk
         robotPOV.configure(image=imgtk)
         convert = cv2.imencode('.jpg', frame)[1].tobytes()
-        yield (b'--img\r\n'
+        yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
 
 
