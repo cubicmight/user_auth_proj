@@ -210,7 +210,7 @@ def gen_frame():
     """Video streaming generator function."""
     global current_image
     while cap:
-        success, img, frame = cap.read()
+        success, img = cap.read()
         imgResult = cvzone.overlayPNG(img, current_image, [750, 400])  ##450 300
         cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
         imgX = Image.fromarray(cv2image)
@@ -218,7 +218,7 @@ def gen_frame():
         robotPOV.imgtk = imgtk
         robotPOV.configure(image=imgtk)
         convert = cv2.imencode('.jpg', frame)[1].tobytes()
-        yield (b'--frame\r\n'
+        yield (b'--img\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
 
 
