@@ -1,33 +1,33 @@
 import cv2
 from flask import render_template, flash, redirect, url_for, Response, jsonify
+from flask.scaffold import setupmethod
+
 from app import app, cap
 from app.forms import LoginForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, UserLogData
 from flask import request
 from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
-from roboclass import MotorDriver
 
-motor = MotorDriver()
+
+# from roboclass import MotorDriver
+
+# motor = MotorDriver()
+
+@setupmethod
+@app.before_first_request
+def clear_user_data_table():
+    UserLogData.query.delete()
+    db.session.commit()
+
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    user = {'username': 'Miguel'}
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template("index.html", title='Home Page', posts=posts)
+    return render_template("index.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -55,12 +55,13 @@ def logout():
     return redirect(url_for('index'))
 
 
-moves = ['yeet 1', 'test 2']
-
-
 @app.route('/logs')
 def logs():
-    return moves
+    data = db.session.query(UserLogData.data).all()
+    row = []
+    for d in data:
+        row.append(d[0])
+    return row
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -80,16 +81,17 @@ def register():
 
 @app.route('/forward/<user>/<int:inchesCount>')
 def forward(user, inchesCount):
-    username = current_user.username ##use this username instead of getting passed in for security
-    motor.MotorForward(inchesCount)
-    moves.append(jsonify({'forward': inchesCount, 'success': True}))
-    moves.append(username + "is moving forward" + inchesCount)
-    motor.MotorStop(0)
-    motor.MotorStop(1)
-    return "Going forward"
-    # return jsonify({'forward': inchesCount, 'success': True})
+    username = current_user.username  ##use this username instead of getting passed in for security
+    # motor.MotorForward(inchesCount)
+    data = UserLogData(data="forward: %d, success: %s\n" % (inchesCount, True))
+    db.session.add(data)
+    db.session.commit()
+    data = UserLogData(data=username + " is moving forward " + str(inchesCount) + "\n")
+    db.session.add(data)
+    db.session.commit()
     # motor.MotorStop(0)
     # motor.MotorStop(1)
+    return jsonify({'forward': inchesCount, 'success': True})
 
 
 @app.route("/reverse/<user>/<int:inchesCount>")
@@ -100,12 +102,13 @@ def reverse(user, inchesCount):
     # return jsonify({'reverse': inchesCount, 'success': True})
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-    motor.MotorReverse(inchesCount)
+    # motor.MotorReverse(inchesCount)
     # moves.append(jsonify({'reverse': inchesCount, 'success': True}))
     moves.append(user + "is moving reverse" + inchesCount)
-    motor.MotorStop(0)
-    motor.MotorStop(1)
-    return "Going reverse"
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
+    return jsonify({'reverse': inchesCount, 'success': True})
+
 
 @app.route("/left/<user>/<int:turnCount>")
 def left(user, turnCount):
@@ -114,12 +117,13 @@ def left(user, turnCount):
     # return jsonify({'left': turnCount, 'success': True})
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-    motor.MotorLeft(turnCount)
+    # motor.MotorLeft(turnCount)
     # moves.append(jsonify({'left': turnCount, 'success': True}))
     moves.append(user + "is turning left" + turnCount * 90)
-    motor.MotorStop(0)
-    motor.MotorStop(1)
-    return "Going left"
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
+    return jsonify({'left': turnCount * 90, 'success': True})
+
 
 @app.route("/right/<user>/<int:turnCount>")
 def right(user, turnCount):
@@ -128,27 +132,30 @@ def right(user, turnCount):
     # return jsonify({'right': turnCount, 'success': True})
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-    motor.MotorRight(turnCount)
+    # motor.MotorRight(turnCount)
     # moves.append(jsonify({'right': turnCount, 'success': True}))
     moves.append(user + "is turning right" + turnCount * 90)
-    motor.MotorStop(0)
-    motor.MotorStop(1)
-    return "Going right"
+    # motor.MotorStop(0)
+    # motor.MotorStop(1)
+    return jsonify({'right': turnCount * 90, 'success': True})
+
 
 @app.route("/special/<user>")
 def special(user):
-    motor.MotorForward(10)
+    # motor.MotorForward(10)
     # moves.append(jsonify({'forward': 10, 'success': True}))
     moves.append(user + "is moving forward 10")
-    motor.MotorRight(1)
+    # motor.MotorRight(1)
     # moves.append(jsonify({'right': 1, 'success': True}))
     moves.append(user + "is turning right 90 degrees")
-    motor.MotorForward(10)
+    # motor.MotorForward(10)
     # moves.append(jsonify({'forward': 10, 'success': True}))
     moves.append(user + "is moving forward 10")
-    motor.MotorLeft(1)
+    # motor.MotorLeft(1)
     # moves.append(jsonify({'left': 1, 'success': True}))
     moves.append(user + "is turning left 90 degrees")
+    return jsonify({'special': True, 'success': True})
+
 
 # @app.route("/stop/<str:user>")
 # def stop(user):

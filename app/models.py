@@ -9,6 +9,14 @@ def load_user(id):
     return User.query.get(int(id))
 
 
+class UserLogData(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    data = db.Column(db.String(512))
+
+    def __repr__(self):
+        return '<UserLogData {}>'.format(self.data)
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)

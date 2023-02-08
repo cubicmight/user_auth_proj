@@ -1,16 +1,12 @@
 <html>
 <head>
-    {% if title %}
     <link rel="stylesheet" href="../static/stylesheet.css">
     <script src="../static/script.js"></script>
-    <title>{{ title }} - Team SALSA API</title>
-    {% else %}
     <title>Team SALSA API</title>
-    {% endif %}
 </head>
 <body>
 <div>
-    Microblog:
+    Team Salsa ROBO:
     <a href="{{ url_for('index') }}">Home</a>
     {% if current_user.is_anonymous %}
     <a href="{{ url_for('login') }}">Login</a>
