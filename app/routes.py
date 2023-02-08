@@ -9,6 +9,7 @@ from flask import request
 from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
+import cvzone
 
 
 from roboclass import MotorDriver
