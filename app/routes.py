@@ -1,5 +1,9 @@
+import json
+import os.path
+
 import cv2
-from flask import render_template, flash, redirect, url_for, Response, jsonify, request
+import cvzone
+from flask import render_template, flash, redirect, url_for, Response, request
 from flask.scaffold import setupmethod
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -8,16 +12,27 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, UserLogData
 
-
 # from roboclass import MotorDriver
 
 # motor = MotorDriver()
+current_direction_image = None
+
 
 @setupmethod
 @app.before_first_request
 def clear_user_data_table():
+    global current_direction_image
     UserLogData.query.delete()
     db.session.commit()
+    basedir = os.path.abspath(os.path.dirname(__file__))
+
+    image_file_name = "direction_arrow.png"
+    full_image_path = os.path.join(basedir, 'static', image_file_name)
+    if os.path.exists(full_image_path):
+        # validate the image
+        current_direction_image = cv2.imread(full_image_path, cv2.IMREAD_UNCHANGED)
+    else:
+        print("cannot find image")
 
 
 @app.route('/')
@@ -79,145 +94,109 @@ def register():
 def forward(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
     # motor.MotorForward(inchesCount)
-    data = UserLogData(data="forward: %d, success: %s\n" % (inchesCount, True))
-    db.session.add(data)
-    # db.session.commit()
-    data = UserLogData(data=username + " is moving forward " + str(inchesCount) + "\n")
+
+    details = {
+        "user": username,
+        "success": True,
+        "movement": "Moving %s, by %d" % ('forward', inchesCount)
+    }
+
+    r = json.dumps(details)
+    data = UserLogData(data=r)
     db.session.add(data)
     db.session.commit()
+
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-    return jsonify({'forward': inchesCount, 'success': True})
+
+    return details
 
 
 @app.route("/reverse/<user>/<int:inchesCount>")
 def reverse(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
     # motor.MotorReverse(inchesCount)
-    data = UserLogData(data="reverse: %d, success: %s\n" % (inchesCount, True))
-    db.session.add(data)
-    # db.session.commit()
-    data = UserLogData(data=username + " is reversing " + str(inchesCount) + "\n")
+
+    details = {
+        "user": username,
+        "success": True,
+        "movement": "Moving %s, by %d" % ('reverse', inchesCount)
+    }
+    data = UserLogData(data=json.dumps(details))
+
     db.session.add(data)
     db.session.commit()
+
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-    return jsonify({'reverse': inchesCount, 'success': True})
+
+    return details
 
 
-@app.route("/left/<user>/<int:turnCount>")
-def left(user, turnCount):
+@app.route("/left/<user>/<int:turn_count>")
+def left(user, turn_count):
+    global current_direction_image
+
     username = current_user.username  ##use this username instead of getting passed in for security
     # motor.MotorLeft(turnCount)
-    data = UserLogData(data="left: %d, success: %s\n" % (turnCount, True))
-    db.session.add(data)
-    # db.session.commit()
-    data = UserLogData(data=username + " is moving left " + str(turnCount) + "\n")
+
+    details = {
+        "user": username,
+        "success": True,
+        "movement": "Moving %s, by %d" % ('left', turn_count * 90)
+    }
+    data = UserLogData(data=json.dumps(details))
+
     db.session.add(data)
     db.session.commit()
+
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-    return jsonify({'left': turnCount * 90, 'success': True})
+
+    current_direction_image = cvzone.rotateImage(current_direction_image, 90 * turn_count)
+
+    return details
 
 
-@app.route("/right/<user>/<int:turnCount>")
-def right(user, turnCount):
+@app.route("/right/<user>/<int:turn_count>")
+def right(user, turn_count):
+    global current_direction_image
+
     username = current_user.username  ##use this username instead of getting passed in for security
     # motor.MotorRight(turnCount)
-    data = UserLogData(data="right: %d, success: %s\n" % (turnCount, True))
-    db.session.add(data)
-    # db.session.commit()
-    data = UserLogData(data=username + " is moving right " + str(turnCount) + "\n")
+
+    details = {
+        "user": username,
+        "success": True,
+        "movement": "Moving %s, by %d" % ('right', turn_count)
+    }
+    data = UserLogData(data=json.dumps(details))
     db.session.add(data)
     db.session.commit()
+
     # motor.MotorStop(0)
     # motor.MotorStop(1)
 
-    # @app.route("/special")
-    # def special(user):
-    #     username = current_user.username  ##use this username instead of getting passed in for security
-    #     motor.MotorForward(10)
-    #     data = UserLogData(data="forward: %d, success: %s\n" % (10, True))
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     data = UserLogData(data=username + " is moving forward " + str(10) + "\n")
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     motor.MotorStop(0)
-    #     motor.MotorStop(1)
-    #     username = current_user.username  ##use this username instead of getting passed in for security
-    #     motor.MotorLeft(turnCount)
-    #     data = UserLogData(data="left: %d, success: %s\n" % (1, True))
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     data = UserLogData(data=username + " is turning " + str(90) + "\n")
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     motor.MotorStop(0)
-    #     motor.MotorStop(1)
-    #     username = current_user.username  ##use this username instead of getting passed in for security
-    #     motor.MotorForward(10)
-    #     data = UserLogData(data="forward: %d, success: %s\n" % (10, True))
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     data = UserLogData(data=username + " is moving forward " + str(10) + "\n")
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     motor.MotorStop(0)
-    #     motor.MotorStop(1)
-    #     username = current_user.username  ##use this username instead of getting passed in for security
-    #     motor.MotorRight(turnCount)
-    #     data = UserLogData(data="right: %d, success: %s\n" % (1, True))
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     data = UserLogData(data=username + " is moving right " + str(90) + "\n")
-    #     db.session.add(data)
-    #     db.session.commit()
-    #     motor.MotorStop(0)
-    #     motor.MotorStop(1)
-    # motor.MotorRight(1)
-    # moves.append(jsonify({'right': 1, 'success': True}))
+    current_direction_image = cvzone.rotateImage(current_direction_image, 270 * turn_count)
 
-    # motor.MotorForward(10)
-    # moves.append(jsonify({'forward': 10, 'success': True}))
-    # motor.MotorLeft(1)
-    # moves.append(jsonify({'left': 1, 'success': True}))
-    return jsonify({'special': True, 'success': True})
-
-
-# @app.route("/stop/<str:user>")
-# def stop(user):
-#     # motor.MotorStop(0)
-#     # motor.MotorStop(1)
-#     # return jsonify({'stop': 0, 'success': True})
-#     # moves.append(jsonify({'stop': turnCount, 'success': True}))
-#     moves.append(user + "is stopping the robot")
-#     motor.MotorStop(0)
-#     motor.MotorStop(1)
-#     return "Stopping"
-
-
-current_image = cv2.imread(
-    "app/arrowpng.parspng.com-18 (1) resizer.png",
-    cv2.IMREAD_UNCHANGED)
+    return details
 
 
 def gen_frame():
     """Video streaming generator function."""
-    global current_image
+    global current_direction_image
     cap = cv2.VideoCapture(0)
     while cap:
         (grabbed, frame) = cap.read()
         if grabbed:
-            # tester = cv2.imwrite(frame, current_image)
-            ret, buffer = cv2.imencode('.jpg', frame)
+            imgResult = cvzone.overlayPNG(frame, current_direction_image, [600, 400])  # 750, 400
+            ret, buffer = cv2.imencode('.jpg', imgResult)
 
             if ret:
                 convert = buffer.tobytes()
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
     cap.release()
-    cv2.destroyAllWindows()
 
 
 @app.route('/video_feed')
@@ -225,32 +204,3 @@ def video_feed():
     """Video streaming route. Put this in the src attribute of an img tag."""
     return Response(gen_frame(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-# background = cv2.imread('field.jpg')
-# overlay = cv2.imread('dice.png')
-#
-# added_image = cv2.addWeighted(background,0.4,overlay,0.1,0)
-#
-# cv2.imwrite('combined.png', added_image)
-
-# def gen_frame():
-#     """Video streaming generator function."""
-#     global current_image
-#     while cap:
-#         img = cap.read()
-#         imgResult = cvzone.overlayPNG(img, current_image, [450, 300])  ##450 300
-#         cv2image = cv2.cvtColor(imgResult, cv2.COLOR_BGR2RGBA)
-#         imgX = Image.fromarray(cv2image)
-#         imgtk = ImageTk.PhotoImage(image=imgX)
-#         robotPOV.imgtk = imgtk
-#         robotPOV.configure(image=imgtk)
-#         convert = cv2.imencode('.jpg', frame)[1].tobytes()
-#         yield (b'--img\r\n'
-#                b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
-#
-#
-# @app.route('/video_feed')
-# def video_feed():
-#     """Video streaming route. Put this in the src attribute of an img tag."""
-#     return Response(gen_frame(),
-#                     mimetype='multipart/x-mixed-replace; boundary=frame')

@@ -9,15 +9,17 @@ function fetchlogs() {
                 let current = color[count % rowCount];
                 count = count + 1;
 
+                details = JSON.parse(data[i]);
+
                 let row = document.createElement("tr");
                 row.className = current;
                 let head = document.createElement("th");
                 head.scope = "row";
-                head.innerHTML = "JS Add";
+                head.innerHTML = details['user'];
                 let col1 = document.createElement("td");
-                col1.innerHTML = data[i];
+                col1.innerHTML = details['movement'];
                 let col2 = document.createElement("td");
-                col2.innerHTML = data[i];
+                col2.innerHTML = details['success'];
 
                 row.appendChild(head);
                 row.appendChild(col1);
