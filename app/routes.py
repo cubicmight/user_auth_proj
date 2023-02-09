@@ -12,9 +12,9 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, UserLogData
 
-# from roboclass import MotorDriver
+from roboclass import MotorDriver
 
-# motor = MotorDriver()
+motor = MotorDriver()
 current_direction_image = None
 
 
