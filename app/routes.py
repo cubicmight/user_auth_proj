@@ -137,7 +137,7 @@ def reverse(user, inchesCount):
 def left(user, turn_count):
 
     username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorLeft(turnCount)
+    motor.MotorLeft(turn_count)
 
     details = {
         "user": username,
@@ -162,7 +162,7 @@ def right(user, turn_count):
 
 
     username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorRight(turnCount)
+    motor.MotorRight(turn_count)
 
     details = {
         "user": username,
