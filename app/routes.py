@@ -155,6 +155,7 @@ def left(user, turn_count):
     current_direction_image = cvzone.rotateImage(current_direction_image, 90 * turn_count)
 
     return details
+##test
 
 
 @app.route("/right/<user>/<int:turn_count>")
