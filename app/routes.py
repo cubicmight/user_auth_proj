@@ -3,7 +3,7 @@ import os.path
 
 import cv2
 import cvzone
-from flask import render_template, flash, redirect, url_for, Response, request
+from flask import render_template, flash, redirect, url_for, Response, request, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
@@ -33,6 +33,12 @@ with app.app_context():
         current_direction_image = cv2.imread(full_image_path, cv2.IMREAD_UNCHANGED)
     else:
         print("cannot find image")
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/')
