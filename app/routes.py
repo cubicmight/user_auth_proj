@@ -93,7 +93,7 @@ def register():
 @app.route('/forward/<user>/<int:inchesCount>')
 def forward(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    # motor.MotorForward(inchesCount)
+    motor.MotorForward(inchesCount)
 
     details = {
         "user": username,
@@ -106,8 +106,8 @@ def forward(user, inchesCount):
     db.session.add(data)
     db.session.commit()
 
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    motor.MotorStop(0)
+    motor.MotorStop(1)
 
     return details
 
@@ -115,7 +115,7 @@ def forward(user, inchesCount):
 @app.route("/reverse/<user>/<int:inchesCount>")
 def reverse(user, inchesCount):
     username = current_user.username  ##use this username instead of getting passed in for security
-    # motor.MotorReverse(inchesCount)
+    motor.MotorReverse(inchesCount)
 
     details = {
         "user": username,
@@ -127,8 +127,8 @@ def reverse(user, inchesCount):
     db.session.add(data)
     db.session.commit()
 
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    motor.MotorStop(0)
+    motor.MotorStop(1)
 
     return details
 
@@ -137,7 +137,7 @@ def reverse(user, inchesCount):
 def left(user, turn_count):
 
     username = current_user.username  ##use this username instead of getting passed in for security
-    # motor.MotorLeft(turnCount)
+    motor.MotorLeft(turnCount)
 
     details = {
         "user": username,
@@ -149,8 +149,8 @@ def left(user, turn_count):
     db.session.add(data)
     db.session.commit()
 
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    motor.MotorStop(0)
+    motor.MotorStop(1)
     global current_direction_image
     current_direction_image = cvzone.rotateImage(current_direction_image, 90 * turn_count)
 
@@ -162,7 +162,7 @@ def right(user, turn_count):
 
 
     username = current_user.username  ##use this username instead of getting passed in for security
-    # motor.MotorRight(turnCount)
+    motor.MotorRight(turnCount)
 
     details = {
         "user": username,
@@ -173,8 +173,8 @@ def right(user, turn_count):
     db.session.add(data)
     db.session.commit()
 
-    # motor.MotorStop(0)
-    # motor.MotorStop(1)
+    motor.MotorStop(0)
+    motor.MotorStop(1)
     global current_direction_image
     current_direction_image = cvzone.rotateImage(current_direction_image, 270 * turn_count)
 
