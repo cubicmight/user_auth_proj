@@ -135,7 +135,6 @@ def reverse(user, inchesCount):
 
 @app.route("/left/<user>/<int:turn_count>")
 def left(user, turn_count):
-    global current_direction_image
 
     username = current_user.username  ##use this username instead of getting passed in for security
     # motor.MotorLeft(turnCount)
@@ -152,7 +151,7 @@ def left(user, turn_count):
 
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-
+    global current_direction_image
     current_direction_image = cvzone.rotateImage(current_direction_image, 90 * turn_count)
 
     return details
@@ -160,7 +159,7 @@ def left(user, turn_count):
 
 @app.route("/right/<user>/<int:turn_count>")
 def right(user, turn_count):
-    global current_direction_image
+
 
     username = current_user.username  ##use this username instead of getting passed in for security
     # motor.MotorRight(turnCount)
@@ -176,7 +175,7 @@ def right(user, turn_count):
 
     # motor.MotorStop(0)
     # motor.MotorStop(1)
-
+    global current_direction_image
     current_direction_image = cvzone.rotateImage(current_direction_image, 270 * turn_count)
 
     return details
@@ -184,11 +183,11 @@ def right(user, turn_count):
 
 def gen_frame():
     """Video streaming generator function."""
-    global current_direction_image
     cap = cv2.VideoCapture(0)
     while cap:
         (grabbed, frame) = cap.read()
         if grabbed:
+            global current_direction_image
             imgResult = cvzone.overlayPNG(frame, current_direction_image, [600, 400])  # 750, 400
             ret, buffer = cv2.imencode('.jpg', imgResult)
 
