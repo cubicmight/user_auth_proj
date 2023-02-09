@@ -6,14 +6,14 @@
     <div class="p-5 m-5 row bg-danger-subtle">
         <div class="row text-center">
             <h1>Video Stream</h1>
-            <img class="center-block" src="{{ url_for('video_feed') }}">
+            <img class="center-block img-fluid" src="{{ url_for('video_feed') }}">
         </div>
     </div>
     <div class="p-5 row">
         <div class="col-sm-4 bg-light">
             <div class="p-5 row">
                 <div class="col-md-12">
-                    <input id="steps" max="500" min="0" name="steps" type="number"></input>
+                    <input id="steps" max="500" min="0" name="steps" type="number" value="5"></input>
                 </div>
             </div>
             <div class="p-5 row">
@@ -40,17 +40,19 @@
             </div>
         </div>
         <div class="col-sm-4 bg-warning-subtle">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">User</th>
-                    <th scope="col">Command</th>
-                    <th scope="col">Result</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">User</th>
+                        <th scope="col">Command</th>
+                        <th scope="col">Result</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-sm-4 bg-primary-subtle">
             Something Else

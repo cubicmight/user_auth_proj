@@ -4,7 +4,6 @@ import os.path
 import cv2
 import cvzone
 from flask import render_template, flash, redirect, url_for, Response, request
-from flask.scaffold import setupmethod
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
@@ -12,16 +11,17 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User, UserLogData
 
-from roboclass import MotorDriver
+try:
+    from roboclass import MotorDriver
 
-motor = MotorDriver()
+    motor = MotorDriver()
+except ImportError:
+    motor = None
+
 current_direction_image = None
+camera = None
 
-
-@setupmethod
-@app.before_first_request
-def clear_user_data_table():
-    global current_direction_image
+with app.app_context():
     UserLogData.query.delete()
     db.session.commit()
     basedir = os.path.abspath(os.path.dirname(__file__))
@@ -90,15 +90,17 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route('/forward/<user>/<int:inchesCount>')
-def forward(user, inchesCount):
-    username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorForward(inchesCount)
+@app.route('/forward/<user>/<int:inches_count>')
+def forward(user, inches_count):
+    # use this username instead of getting passed in for security
+    username = current_user.username
+    if motor:
+        motor.MotorForward(inches_count)
 
     details = {
         "user": username,
         "success": True,
-        "movement": "Moving %s, by %d" % ('forward', inchesCount)
+        "movement": "Moving %s, by %d" % ('forward', inches_count)
     }
 
     r = json.dumps(details)
@@ -106,38 +108,41 @@ def forward(user, inchesCount):
     db.session.add(data)
     db.session.commit()
 
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    if motor:
+        motor.MotorStop(0)
+        motor.MotorStop(1)
 
     return details
 
 
-@app.route("/reverse/<user>/<int:inchesCount>")
-def reverse(user, inchesCount):
-    username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorReverse(inchesCount)
+@app.route("/reverse/<user>/<int:inches_count>")
+def reverse(user, inches_count):
+    username = current_user.username  # use this username instead of getting passed in for security
+    if motor:
+        motor.MotorReverse(inches_count)
 
     details = {
         "user": username,
         "success": True,
-        "movement": "Moving %s, by %d" % ('reverse', inchesCount)
+        "movement": "Moving %s, by %d" % ('reverse', inches_count)
     }
     data = UserLogData(data=json.dumps(details))
 
     db.session.add(data)
     db.session.commit()
 
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    if motor:
+        motor.MotorStop(0)
+        motor.MotorStop(1)
 
     return details
 
 
 @app.route("/left/<user>/<int:turn_count>")
 def left(user, turn_count):
-
-    username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorLeft(turn_count)
+    username = current_user.username  # #use this username instead of getting passed in for security
+    if motor:
+        motor.MotorLeft(turn_count)
 
     details = {
         "user": username,
@@ -149,21 +154,20 @@ def left(user, turn_count):
     db.session.add(data)
     db.session.commit()
 
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    if motor:
+        motor.MotorStop(0)
+        motor.MotorStop(1)
     global current_direction_image
     current_direction_image = cvzone.rotateImage(current_direction_image, 90 * turn_count)
 
     return details
-##test
 
 
 @app.route("/right/<user>/<int:turn_count>")
 def right(user, turn_count):
-
-
-    username = current_user.username  ##use this username instead of getting passed in for security
-    motor.MotorRight(turn_count)
+    username = current_user.username  # #use this username instead of getting passed in for security
+    if motor:
+        motor.MotorRight(turn_count)
 
     details = {
         "user": username,
@@ -174,8 +178,9 @@ def right(user, turn_count):
     db.session.add(data)
     db.session.commit()
 
-    motor.MotorStop(0)
-    motor.MotorStop(1)
+    if motor:
+        motor.MotorStop(0)
+        motor.MotorStop(1)
     global current_direction_image
     current_direction_image = cvzone.rotateImage(current_direction_image, 270 * turn_count)
 
@@ -184,7 +189,12 @@ def right(user, turn_count):
 
 def gen_frame():
     """Video streaming generator function."""
-    cap = cv2.VideoCapture(0)
+    global camera
+    if not camera:
+        cap = cv2.VideoCapture(0)
+        camera = cap
+    else:
+        cap = camera
     while cap:
         (grabbed, frame) = cap.read()
         if grabbed:
@@ -195,7 +205,8 @@ def gen_frame():
             if ret:
                 convert = buffer.tobytes()
                 yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')  # concate frame one by one and show result
+                       b'Content-Type: image/jpeg\r\n\r\n' + convert + b'\r\n')
+                # concatenate frame one by one and show result
     cap.release()
 
 
